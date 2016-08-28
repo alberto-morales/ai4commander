@@ -2,32 +2,7 @@ var myModule = angular.module('commanderApp', []);
 
 myModule.controller('mainController', ['$scope', '$http', function($scope, $http) {
 
-	var laPutaURL = 'http://172.24.10.97:7300/commander';
-
-	$scope.commanderURL = laPutaURL; // commander.URL;
-
-//	// Cuando se cargue la página, pide del API todos los SERVERs
-//	$http.get("http://192.168.1.130:8180/commander/rest/servers")
-//	    .success(function(data) {
-//	        console.log(data);
-//	        alert("esto es una kaka");
-//	        debugger
-//	        var arrayOfEnhancedServers = [];
-//	    	for (server of data) {
-//	    		jQuery.extend(server,{
-//	    			saludar : function() {
-//	    			    alert("hola, soy rafa = '"+this.id+"'");
-//	    			}
-//	    		});
-//				arrayOfEnhancedServers.push(server);
-//	    	}
-//	        $scope.servers = arrayOfEnhancedServers;
-//	    })
-//	    .error(function(data) {
-//	        console.log('Error: ' + data);
-//	    });
-
-
+	$scope.commanderURL = commander.URL;
 
 	// Cuando se cargue la página, pide del API todos los PROJECTs
 	$http.get($scope.commanderURL + '/rest/projects')
@@ -46,4 +21,35 @@ myModule.controller('mainController', ['$scope', '$http', function($scope, $http
 		 $scope.curProject = curProject;
 	 };
 
+	 $scope.selectEnvironment = function(selectedEnvironment) {
+		 alert('seleccionado '+selectedEnvironment.description);
+		 debugger
+	 };
+
 }]);
+
+myModule.directive('projectInfo', [function() {
+    return {
+      restrict: 'E',
+      template:'<div id="ci-proyecto">' +
+    	          '<div id="ci-proyecto-nombre">{{curProject.description}}</div><p>Environments</p>' +
+    	          '<div id="ci-proyecto-entornos" style="border: 1px solid red;" >' +
+    	          	'<div ng-repeat="environment in curProject.environments">' +
+    	          		'<environment-info></environment-info>' +
+    	          	'</div>' +
+    	          '</div>' +
+    	         '</div>'
+    };
+  }]);
+
+myModule.directive('environmentInfo', [function() {
+    return {
+      restrict: 'E',
+      template:'<div style="border: 1px solid blue;"><div><a href="#" ng-click="selectEnvironment(environment)">{{ environment.id }}</a><div>' +
+                  '<div>' +
+                     '<p>Descripción: {{ environment.description }}</p>' +
+                     '<p>URL: {{ environment.homeURL }}&nbsp;<a href="{{ environment.homeURL }}" target="_blank"><span>.</span>ir</a></p>' +
+                  '</div>'+
+               '</div>'
+    };
+  }]);

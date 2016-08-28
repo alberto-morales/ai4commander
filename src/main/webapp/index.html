@@ -32,17 +32,15 @@
 		<div class="contents container">
 		    <!--Cabecera-->
 	        <div class="jumbotron text-center">
-	            <h1>{{ curProject.description }} (tiene <span class="label label-info">{{ curProject.environments.length }} environments</span>)</h1>
+	            <project-info></project-info>
 	        </div>
-	        <!--Lista de Servers-->
+	        <!--Lista de environments-->
 	        <div id="todo-list" class="row">
 	            <div class="col-sm-4 col-sm-offset-4">
 	                <div class="checkbox" ng-repeat="environment in curProject.environments">
-	                    <label>
-	                        <environmentUI obj={{environment}} >Esto se va a reemplazar</environmentUI>
-	                    </label>
-	                 </div>
-	             </div>
+	                	<environment-info></environment-info>
+	                </div>
+	            </div>
 	         </div>
 			<h2>Featured by {{featured}}</h2>
 		</div>
