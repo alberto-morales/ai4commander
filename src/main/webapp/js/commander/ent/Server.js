@@ -21,6 +21,7 @@
 						  serverDataEnhanced.alive = self.alive;
 					  }
 					 $.extend(true, self, serverDataEnhanced);
+					 if (self.onActualizaVersion) self.onActualizaVersion();
 					 serverDataEnhanced.operacion = 'server';
 				     console.log(serverDataEnhanced);
 				     funcionCallback();
@@ -31,6 +32,7 @@
 	                  alert("No se puede recuperar el sever: "+self.id);
 					  if (!self.tieneVersion()) {
 						  self.version = '<<ERROR>>';
+						  if (self.onActualizaVersion) self.onActualizaVersion();
 					  }
 					  if (!self.tieneAlive()) {
 						  self.alive = '<<ERROR>>';
@@ -48,6 +50,7 @@
 
 				  success: function(versionInfo) {
 					 $.extend(true, self, {'version' : versionInfo});
+					 if (self.onActualizaVersion) self.onActualizaVersion();
 					 var datosConsola = { 'operacion' : 'server.' + self.id + '.version', 'versionInfo' : versionInfo };
 				     console.log(datosConsola);
 				     if (funcionCallback) funcionCallback();
@@ -57,6 +60,7 @@
 				  error: function(data) {
 	                  alert("No se puede actualizar la version del sever: "+self.id);
 					  self.version = '<<ERROR>>';
+					  if (self.onActualizaVersion) self.onActualizaVersion();
 					  data.operacion = 'ERROR server.' + self.id + '.version';
 					  console.log(data);
 					  if (funcionCallback) funcionCallback();

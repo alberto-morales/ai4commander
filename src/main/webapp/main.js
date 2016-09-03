@@ -59,9 +59,9 @@ myModule.directive('environmentInfo', [function() {
                   '<div id="ci-entorno-datos-{{environment.id}}">' +
                     '<p>Descripción: {{ environment.description }}</p>' +
                     '<p>URL: {{ environment.homeURL }}&nbsp;<a href="{{ environment.homeURL }}" target="_blank"><span>.</span>ir</a></p>' +
-                    '<p>Versión: </p>' +
-                    '<p>Conexión: </p>' +
-                    '<p>Esquema: </p>' +
+                    '<p>Versión: {{ environment.version }}&nbsp; <span ng-show="environment.estaVersionCorrupta" class="glyphicon glyphicon-warning-sign" title="Ojo! Versiones NO coincidentes: {{ environment.versionNoCoincidente }}"></span></p>' +
+                    '<p>Conexión: {{ environment.urlBBDD }}</p>' +
+                    '<p>Esquema: {{ environment.userBBDD }}</p>' +
                     '<div id="ci-entorno-servidores-{{environment.id}}">' +
                     	'<p>Servers</p>' +
                     	'<table id="ci-tabla-servidores-{{environment.id}}"><thead><tr><th>Descripción</th><th>IP</th><th>Versión</th><th>Estado</th></tr></thead><tbody>' +
