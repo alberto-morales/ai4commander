@@ -10,20 +10,39 @@
 				 $.extend(true, self, environmentData);
 			     console.log(self.servers);
 				 $(self.servers).each(function(j) {
-					 var serverData = this;
-					 var serverObj = commander.ent.server(serverData);
-					 self.servers[j] = serverObj;
+					var serverData = this;
+					// la creacion del server es rápida, no tiene ajax
+					var serverObj = commander.ent.server(serverData);
+					self.servers[j] = serverObj;
 				 }); // fin each
 			  },
 			  processData : false,
 			  dataType: 'json',
 			  async: false,
 			  error: function(data) {
-				  alert("No se puede recuperar el environmnet: "+environmentID);
+                  	 alert("No se puede recuperar el environment: "+environmentID);
+				     data.operacion = 'environment';
+				     console.log(data);
 			  }
 		});
 
+		this.inicializar = function(funcionCallback){
+			$(self.servers).each(function(i) { // iteramos por todos los servers para actualizar su version
+				this.actualizarVersion(function() {
+					funcionCallback();
+				});
+			 }); // fin each
+
+		}
+
 		this.actualizarDatosLazy = function(funcionCallback){
+
+			$(self.servers).each(function(i) { // iteramos por todos los servers para actualizar su alive status
+				this.actualizarAlive(function() {
+					funcionCallback();
+				});
+			 }); // fin each
+
 			$(self.servers).each(function(i) { // iteramos por todos los servers para actualizar sus datos lazy
 				this.actualizarDatosLazy(function() {
 					funcionCallback();

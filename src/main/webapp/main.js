@@ -19,6 +19,11 @@ myModule.controller('mainController', ['$scope', '$http', function($scope, $http
 	 $scope.selectProject = function(projectID) {
 		 var curProject = commander.ent.project(projectID);
 		 $scope.curProject = curProject;
+		 $(curProject.environments).each(function(j) {
+			 this.inicializar(function() {
+				 $scope.$apply();
+			 });
+		 }); // fin each
 	 };
 
 	 $scope.selectEnvironment = function(selectedEnvironment) {
@@ -75,6 +80,16 @@ myModule.directive('serverInfo', [function() {
       scope: {
     	  'server' : '=obj'
         },
-      template: '<tr id="ci-fila-servidor-{{server.id}}"><td>{{server.description}}</td><td>{{server.address}}</td><td>{{server.version}}</td><td>{{server.alive}}</td></tr>'
+      template: '<tr id="ci-fila-servidor-{{server.id}}"><td>{{server.description}}</td><td>{{server.address}}</td><td>' +
+                '<span ng-hide="server.tieneVersion()"><img id="ci-fila-servidor-version-cargando-{{server.id}}" src="images/ajax-loader.gif" alt="Obteniendo versión..." title="Obteniendo versión..."/></span>' +
+                '<span id="ci-fila-servidor-version-version-{{server.id}}" ng-show="server.tieneVersion()">{{server.version}}</span>' +
+                '</td><td>' +
+                '<span ng-hide="server.tieneAlive()"><img id="ci-fila-servidor-alive-cargando-{{server.id}}" src="images/ajax-loader.gif" alt="Obteniendo alive..." title="Obteniendo alive..."/></span>' +
+                '<span id="ci-fila-servidor-alive-alive-{{server.id}}" ng-show="server.tieneAlive()">' +
+                '<span ng-show="server.alive">' +
+                '<span ng-show="server.alive" class="glyphicon glyphicon-thumbs-up" ></span>' +
+                '<span ng-hide="server.alive" class="glyphicon glyphicon-thumbs-down" ></span>' +
+                '</span>' +
+                '</td></tr>'
     };
   }]);

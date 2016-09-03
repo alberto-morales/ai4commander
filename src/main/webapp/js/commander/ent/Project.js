@@ -13,6 +13,8 @@
 					     console.log(listaProjects);
 						 $(self.environments).each(function(j) {
 							 var environmentID = this;
+							 // la creacion del environment tiene ajax sincrona pero rapida,
+							 // al iterar por los servers no hace ajax
 							 var environmentData = commander.ent.environment(environmentID);
 							 self.environments[j] = environmentData;
 						 }); // fin each
@@ -23,7 +25,8 @@
 			  dataType: 'json',
 			  async: false,
 			  error: function(data) {
-				  alert("No se puede recuperar el proyecto: "+projectID);
+				     data.operacion = 'projects';
+				     console.log(data);
 			  }
 		});
 
