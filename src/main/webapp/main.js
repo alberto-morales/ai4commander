@@ -14,7 +14,7 @@ myModule.controller('mainController', ['$scope', '$http', function($scope, $http
 	        console.log('Error: ' + data);
 	    });
 
-	 $scope.featured = 'Alberto Morales';
+	 $scope.developed = 'Alberto Morales';
 
 	 $scope.selectProject = function(projectID) {
 		 var curProject = commander.ent.project(projectID);
