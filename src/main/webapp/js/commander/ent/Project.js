@@ -10,6 +10,7 @@
 				  $(listaProjects).each(function(i) { // NO tenemos API para buscar un proyecto, por eso iteramos
 					 if (this.id == projectID) { // esto es que lo ha encontrado en la lista de proyectos
 						 $.extend(true, self, this);
+					     console.log(listaProjects);
 						 $(self.environments).each(function(j) {
 							 var environmentID = this;
 							 var environmentData = commander.ent.environment(environmentID);

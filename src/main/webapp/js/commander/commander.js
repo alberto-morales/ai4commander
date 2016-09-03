@@ -17,6 +17,7 @@
 	 */
 	MP.Utils.includeJavaScript("/js/commander/ent/Project.js");
 	MP.Utils.includeJavaScript("/js/commander/ent/Environment.js");
+	MP.Utils.includeJavaScript("/js/commander/ent/Server.js");
 
 	return (commander);
 

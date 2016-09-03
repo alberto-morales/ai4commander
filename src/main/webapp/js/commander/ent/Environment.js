@@ -8,6 +8,12 @@
 
 			  success: function(environmentData) {
 				 $.extend(true, self, environmentData);
+			     console.log(self.servers);
+				 $(self.servers).each(function(j) {
+					 var serverData = this;
+					 var serverObj = commander.ent.server(serverData);
+					 self.servers[j] = serverObj;
+				 }); // fin each
 			  },
 			  processData : false,
 			  dataType: 'json',
@@ -16,6 +22,15 @@
 				  alert("No se puede recuperar el environmnet: "+environmentID);
 			  }
 		});
+
+		this.actualizarDatosLazy = function(funcionCallback){
+			$(self.servers).each(function(i) { // iteramos por todos los servers para actualizar sus datos lazy
+				this.actualizarDatosLazy(function() {
+					funcionCallback();
+				});
+			 }); // fin each
+
+		}
 
 	};
 

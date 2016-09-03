@@ -22,8 +22,9 @@ myModule.controller('mainController', ['$scope', '$http', function($scope, $http
 	 };
 
 	 $scope.selectEnvironment = function(selectedEnvironment) {
-		 alert('seleccionado '+selectedEnvironment.description);
-		 debugger
+		 selectedEnvironment.actualizarDatosLazy(function() {
+			 $scope.$apply();
+		 });
 	 };
 
 }]);
@@ -58,7 +59,7 @@ myModule.directive('environmentInfo', [function() {
                     '<p>Esquema: </p>' +
                     '<div id="ci-entorno-servidores-{{environment.id}}">' +
                     	'<p>Servers</p>' +
-                    	'<table id="ci-tabla-servidores-{{environment.id}}"><thead><tr><th>Descripción</th><th>IP</th></tr></thead><tbody>' +
+                    	'<table id="ci-tabla-servidores-{{environment.id}}"><thead><tr><th>Descripción</th><th>IP</th><th>Versión</th><th>Estado</th></tr></thead><tbody>' +
     	          		  	'<tr server-info ng-repeat="server in environment.servers" obj="server" ></tr>' +
                     	'</tbody></table>' +
                     '</div>'+
@@ -74,6 +75,6 @@ myModule.directive('serverInfo', [function() {
       scope: {
     	  'server' : '=obj'
         },
-      template: '<tr id="ci-fila-servidor-{{server.id}}"><td>{{server.description}}</td><td>{{server.address}}</td></tr>'
+      template: '<tr id="ci-fila-servidor-{{server.id}}"><td>{{server.description}}</td><td>{{server.address}}</td><td>{{server.version}}</td><td>{{server.alive}}</td></tr>'
     };
   }]);
