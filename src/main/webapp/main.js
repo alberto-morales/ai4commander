@@ -95,8 +95,8 @@ myModule.directive('serverInfo', [function() {
 	                '<span id="ci-fila-servidor-alive-info-{{server.id}}" ng-show="server.tieneAlive()">' +
 		                '<span ng-show="server.tieneAliveError()" class="glyphicon glyphicon-remove" ></span>' +
 		                '<span id="ci-fila-servidor-alive-info-icons-{{server.id}}" ng-hide="server.tieneAliveError()">' +
-			                '<span ng-show="server.alive" class="glyphicon glyphicon-thumbs-up" ></span>' +
-			                '<span ng-hide="server.alive" class="glyphicon glyphicon-thumbs-down" ></span>' +
+			                '<span ng-show="server.alive" class="glyphicon glyphicon-thumbs-up" ><a href="{{ server.homeURL }}" target="_blank" title="Parar" alt="Parar"><span class="glyphicon glyphicon-stop" /></a></span>' +
+			                '<span ng-hide="server.alive" class="glyphicon glyphicon-thumbs-down" ><a href="{{ server.homeURL }}" target="_blank" title="Arrancar" alt="Arrancar"><span class="glyphicon glyphicon-play" /></a></span>' +
 		                '</span>' +
 	                '</span>' +
                 '</td></tr>'
