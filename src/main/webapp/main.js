@@ -81,15 +81,22 @@ myModule.directive('serverInfo', [function() {
     	  'server' : '=obj'
         },
       template: '<tr id="ci-fila-servidor-{{server.id}}"><td>{{server.description}}</td><td>{{server.address}}</td><td>' +
-                '<span ng-hide="server.tieneVersion()"><img id="ci-fila-servidor-version-cargando-{{server.id}}" src="images/ajax-loader.gif" alt="Obteniendo versión..." title="Obteniendo versión..."/></span>' +
-                '<span id="ci-fila-servidor-version-version-{{server.id}}" ng-show="server.tieneVersion()">{{server.version}}</span>' +
+	                '<span ng-hide="server.tieneVersion()"><img id="ci-fila-servidor-version-cargando-{{server.id}}" src="images/ajax-loader.gif" alt="Obteniendo versión..." title="Obteniendo versión..."/></span>' +
+	                '<span id="ci-fila-servidor-version-info-{{server.id}}" ng-show="server.tieneVersion()">' +
+		                '<span ng-show="server.tieneVersionError()" class="glyphicon glyphicon-remove" ></span>' +
+		                '<span id="ci-fila-servidor-version-info-text-{{server.id}}" ng-hide="server.tieneVersionError()">' +
+		                	'{{server.version}}' +
+		                '</span>' +
+	                '</span>' +
                 '</td><td>' +
-                '<span ng-hide="server.tieneAlive()"><img id="ci-fila-servidor-alive-cargando-{{server.id}}" src="images/ajax-loader.gif" alt="Obteniendo alive..." title="Obteniendo alive..."/></span>' +
-                '<span id="ci-fila-servidor-alive-alive-{{server.id}}" ng-show="server.tieneAlive()">' +
-                '<span ng-show="server.alive">' +
-                '<span ng-show="server.alive" class="glyphicon glyphicon-thumbs-up" ></span>' +
-                '<span ng-hide="server.alive" class="glyphicon glyphicon-thumbs-down" ></span>' +
-                '</span>' +
+	                '<span ng-hide="server.tieneAlive()"><img id="ci-fila-servidor-alive-cargando-{{server.id}}" src="images/ajax-loader.gif" alt="Obteniendo alive..." title="Obteniendo alive..."/></span>' +
+	                '<span id="ci-fila-servidor-alive-info-{{server.id}}" ng-show="server.tieneAlive()">' +
+		                '<span ng-show="server.tieneAliveError()" class="glyphicon glyphicon-remove" ></span>' +
+		                '<span id="ci-fila-servidor-alive-info-icons-{{server.id}}" ng-hide="server.tieneAliveError()">' +
+			                '<span ng-show="server.alive" class="glyphicon glyphicon-thumbs-up" ></span>' +
+			                '<span ng-hide="server.alive" class="glyphicon glyphicon-thumbs-down" ></span>' +
+		                '</span>' +
+	                '</span>' +
                 '</td></tr>'
     };
   }]);

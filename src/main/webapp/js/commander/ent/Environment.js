@@ -29,7 +29,7 @@
 		this.inicializar = function(funcionCallback){
 			$(self.servers).each(function(i) { // iteramos por todos los servers para actualizar su version
 				this.actualizarVersion(function() {
-					funcionCallback();
+					if (funcionCallback) funcionCallback();
 				});
 			 }); // fin each
 
@@ -39,13 +39,13 @@
 
 			$(self.servers).each(function(i) { // iteramos por todos los servers para actualizar su alive status
 				this.actualizarAlive(function() {
-					funcionCallback();
+					if (funcionCallback) funcionCallback();
 				});
 			 }); // fin each
 
 			$(self.servers).each(function(i) { // iteramos por todos los servers para actualizar sus datos lazy
 				this.actualizarDatosLazy(function() {
-					funcionCallback();
+					if (funcionCallback) funcionCallback();
 				});
 			 }); // fin each
 

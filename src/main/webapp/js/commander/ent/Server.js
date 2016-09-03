@@ -29,8 +29,15 @@
 				  async: true,
 				  error: function(data) {
 	                  alert("No se puede recuperar el sever: "+self.id);
-					  data.operacion = 'server.' + self.id;
+					  if (!self.tieneVersion()) {
+						  self.version = '<<ERROR>>';
+					  }
+					  if (!self.tieneAlive()) {
+						  self.alive = '<<ERROR>>';
+					  }
+					  data.operacion = 'ERROR server.' + self.id;
 					  console.log(data);
+					  funcionCallback();
 				  }
 			});
 		}
@@ -43,14 +50,16 @@
 					 $.extend(true, self, {'version' : versionInfo});
 					 var datosConsola = { 'operacion' : 'server.' + self.id + '.version', 'versionInfo' : versionInfo };
 				     console.log(datosConsola);
-				     funcionCallback();
+				     if (funcionCallback) funcionCallback();
 				  },
 				  processData : false,
 				  async: true,
 				  error: function(data) {
 	                  alert("No se puede actualizar la version del sever: "+self.id);
-					  data.operacion = 'server.' + self.id + '.version';
+					  self.version = '<<ERROR>>';
+					  data.operacion = 'ERROR server.' + self.id + '.version';
 					  console.log(data);
+					  if (funcionCallback) funcionCallback();
 				  }
 			});
 		}
@@ -63,16 +72,17 @@
 					 $.extend(true, self, {'alive' : aliveStatus});
 					 var datosConsola = { 'operacion' : 'server.' + self.id + '.status', 'alive' : aliveStatus };
 				     console.log(datosConsola);
-				     funcionCallback();
+				     if (funcionCallback) funcionCallback();
 				  },
 				  processData : false,
 				  dataType: 'json',
 				  async: true,
 				  error: function(data) {
 	                  alert("No se puede actualizar el alive del sever: "+self.id);
-					  data.operacion = 'server.' + self.id + '.status';
+					  self.alive = '<<ERROR>>';
+					  data.operacion = 'ERROR server.' + self.id + '.status';
 					  console.log(data);
-					  funcionCallback();
+					  if (funcionCallback) funcionCallback();
 				  }
 			});
 
@@ -82,9 +92,18 @@
 			return self.version != '?';
 		}
 
+
+		this.tieneVersionError = function() {
+			return this.tieneVersion() && this.version == '<<ERROR>>'
+		}
+
 		this.tieneAlive = function() {
 			var resultado = self.alive != '?';
 			return self.alive != '?';
+		}
+
+		this.tieneAliveError = function() {
+			return this.tieneAlive() && this.alive == '<<ERROR>>'
 		}
 
 	};
