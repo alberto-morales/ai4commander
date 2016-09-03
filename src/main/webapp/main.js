@@ -58,7 +58,7 @@ myModule.directive('environmentInfo', [function() {
       			  '<div id="ci-entorno-id-{{environment.id}}"><a href="#" ng-click="selectEnvironment(environment)">{{ environment.id }}</a></div>' +
                   '<div id="ci-entorno-datos-{{environment.id}}">' +
                     '<p>Descripción: {{ environment.description }}</p>' +
-                    '<p>URL: {{ environment.homeURL }}&nbsp;<a href="{{ environment.homeURL }}" target="_blank"><span>.</span>ir</a></p>' +
+                    '<p>URL: {{ environment.homeURL }}&nbsp;<a href="{{ environment.homeURL }}" target="_blank" title="Ir" alt="Ir"><span class="glyphicon glyphicon-share-alt" /></a></p>' +
                     '<p>Versión: {{ environment.version }}&nbsp; <span ng-show="environment.estaVersionCorrupta" class="glyphicon glyphicon-warning-sign" title="Ojo! Versiones NO coincidentes: {{ environment.versionNoCoincidente }}"></span></p>' +
                     '<p>Conexión: {{ environment.urlBBDD }}</p>' +
                     '<p>Esquema: {{ environment.userBBDD }}</p>' +
@@ -80,7 +80,9 @@ myModule.directive('serverInfo', [function() {
       scope: {
     	  'server' : '=obj'
         },
-      template: '<tr id="ci-fila-servidor-{{server.id}}"><td>{{server.description}}</td><td>{{server.address}}</td><td>' +
+      template: '<tr id="ci-fila-servidor-{{server.id}}"><td>'+
+                '{{server.description}}&nbsp;<a href="{{ server.homeURL }}" target="_blank" title="Ir" alt="Ir"><span class="glyphicon glyphicon-share-alt" /></a>' +
+                '</td><td>{{server.address}}</td><td>' +
 	                '<span ng-hide="server.tieneVersion()"><img id="ci-fila-servidor-version-cargando-{{server.id}}" src="images/ajax-loader.gif" alt="Obteniendo versión..." title="Obteniendo versión..."/></span>' +
 	                '<span id="ci-fila-servidor-version-info-{{server.id}}" ng-show="server.tieneVersion()">' +
 		                '<span ng-show="server.tieneVersionError()" class="glyphicon glyphicon-remove" ></span>' +
