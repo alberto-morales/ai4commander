@@ -1,10 +1,12 @@
 (function() {
 
+	var COMMANDER = window.commander;
+
 	function Project (projectID) {
 		var self = this;
 
 		$.ajax({
-			  url: commander.URL + '/rest/projects',
+			  url: COMMANDER.URL + '/rest/projects',
 
 			  success: function(listaProjects) {
 				  $(listaProjects).each(function(i) { // NO tenemos API para buscar un proyecto, por eso iteramos
@@ -15,7 +17,7 @@
 							 var environmentID = this;
 							 // la creacion del environment tiene ajax sincrona pero rapida,
 							 // al iterar por los servers no hace ajax
-							 var environmentData = commander.ent.environment(environmentID);
+							 var environmentData = COMMANDER.ent.environment(environmentID);
 							 self.environments[j] = environmentData;
 						 }); // fin each
 					 }
@@ -32,7 +34,7 @@
 
 	};
 
-	$.extend(commander.ent,{
+	$.extend(COMMANDER.ent,{
 			project: function(id) {
 				 return new Project(id);
 			}

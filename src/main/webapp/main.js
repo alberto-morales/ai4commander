@@ -2,7 +2,9 @@ var myModule = angular.module('commanderApp', []);
 
 myModule.controller('mainController', ['$scope', '$http', function($scope, $http) {
 
-	$scope.commanderURL = commander.URL;
+	var commander = window.commander;
+
+	$scope.commanderURL = window.commander.URL;
 
 	// Cuando se cargue la página, pide del API todos los PROJECTs
 	$http.get($scope.commanderURL + '/rest/projects')
@@ -17,18 +19,18 @@ myModule.controller('mainController', ['$scope', '$http', function($scope, $http
 	 $scope.developed = 'Alberto Morales';
 
 	 $scope.selectProject = function(projectID) {
-		 var curProject = commander.ent.project(projectID);
+		 var curProject = window.commander.ent.project(projectID);
 		 $scope.curProject = curProject;
 		 $(curProject.environments).each(function(j) {
 			 this.inicializar(function() {
-				 $scope.$apply();
+				 // $scope.$apply();
 			 });
 		 }); // fin each
 	 };
 
 	 $scope.selectEnvironment = function(selectedEnvironment) {
 		 selectedEnvironment.actualizarDatosLazy(function() {
-			 $scope.$apply();
+			 // $scope.$apply();
 		 });
 	 };
 

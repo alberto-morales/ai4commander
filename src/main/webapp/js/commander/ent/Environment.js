@@ -1,5 +1,7 @@
 (function() {
 
+	var COMMANDER = window.commander;
+
 	function Environment (environmentID) {
 		var self = this;
 
@@ -9,7 +11,7 @@
 		self.userBBDD = '';
 
 		$.ajax({
-			  url: commander.URL + "/rest/environments/"+environmentID,
+			  url: COMMANDER.URL + "/rest/environments/"+environmentID,
 
 			  success: function(environmentData) {
 				 $.extend(true, self, environmentData);
@@ -17,7 +19,7 @@
 				 $(self.servers).each(function(j) {
 					var serverData = this;
 					// la creacion del server es rápida, no tiene ajax
-					var serverObj = commander.ent.server(serverData);
+					var serverObj = COMMANDER.ent.server(serverData);
 					serverObj.onActualizaVersion = function() {
 						self.actualizarVersion();
 					};
@@ -34,86 +36,103 @@
 			  }
 		});
 
-		this.inicializar = function(funcionCallback){
-			$(self.servers).each(function(i) { // iteramos por todos los servers para actualizar su version
-				this.actualizarVersion(function() {
+	};
+
+	Environment.prototype.inicializar = function(funcionCallback){
+
+		var self = this;
+
+		$(self.servers).each(function(i) { // iteramos por todos los servers para actualizar su version
+			var eachServer = this;
+			if (eachServer.isHCIS()) {
+				eachServer.actualizarVersion(function() {
 					if (funcionCallback) funcionCallback();
 				});
-			 }); // fin each
+			}
+		 }); // fin each
 
-		}
+	}
 
-		this.actualizarDatosLazy = function(funcionCallback){
+	Environment.prototype.actualizarDatosLazy = function(funcionCallback){
 
-			$.ajax({
-				  url: commander.URL + "/rest/environments/"+environmentID+"/shema",
+		var self = this;
 
-				  success: function(schemaInfo) {
+		$.ajax({
+			  url: COMMANDER.URL + "/rest/environments/"+self.id+"/shema",
 
-					 var urlBBDD = schemaInfo.substring(0, schemaInfo.indexOf("|"));
- 		    		 var userBBDD = schemaInfo.substring(schemaInfo.indexOf("|") + 1, schemaInfo.lenght);
+			  success: function(schemaInfo) {
 
-					 $.extend(true, self, {'urlBBDD' : urlBBDD, 'userBBDD' : userBBDD});
+				 var urlBBDD = schemaInfo.substring(0, schemaInfo.indexOf("|"));
+		    		 var userBBDD = schemaInfo.substring(schemaInfo.indexOf("|") + 1, schemaInfo.lenght);
 
-					 if (self.onActualizaVersion) self.onActualizaVersion();
-					 var datosConsola = { 'operacion' : 'environment.' + environmentID + '.schema', 'urlBBDD' : urlBBDD, 'userBBDD' : userBBDD };
-				     console.log(datosConsola);
-				     if (funcionCallback) funcionCallback();
-				  },
-				  processData : false,
-				  async: true,
-				  error: function(data) {
-	                  alert("No se puede actualizar el schema del environment: "+environmentID);
-					  self.urlBBDD = '<<ERROR>>';
-					  self.userBBDD = '<<ERROR>>';
+				 $.extend(true, self, {'urlBBDD' : urlBBDD, 'userBBDD' : userBBDD});
 
-					  data.operacion = 'ERROR environment.' + environmentID + '.schema';
-					  console.log(data);
-					  if (funcionCallback) funcionCallback();
-				  }
-			});
+				 if (self.onActualizaVersion) self.onActualizaVersion();
+				 var datosConsola = { 'operacion' : 'environment.' + self.id + '.schema', 'urlBBDD' : urlBBDD, 'userBBDD' : userBBDD };
+			     console.log(datosConsola);
+			     if (funcionCallback) funcionCallback();
+			  },
+			  processData : false,
+			  async: true,
+			  error: function(data) {
+                  alert("No se puede actualizar el schema del environment: "+self.id);
+				  self.urlBBDD = '<<ERROR>>';
+				  self.userBBDD = '<<ERROR>>';
 
-			$(self.servers).each(function(i) { // iteramos por todos los servers para actualizar su alive status
-				this.actualizarAlive(function() {
+				  data.operacion = 'ERROR environment.' + self.id + '.schema';
+				  console.log(data);
+				  if (funcionCallback) funcionCallback();
+			  }
+		});
+
+		$(self.servers).each(function(i) { // iteramos por todos los servers de tipo HCIS para actualizar su alive status
+			var eachServer = this;
+			if (eachServer.isHCIS()) {
+				eachServer.actualizarAlive(function() {
 					if (funcionCallback) funcionCallback();
 				});
-			 }); // fin each
+			}
+		 }); // fin each
 
-			$(self.servers).each(function(i) { // iteramos por todos los servers para actualizar sus datos lazy
-				this.actualizarDatosLazy(function() {
+		$(self.servers).each(function(i) { // iteramos por todos los servers de tipo HCIS para actualizar sus datos lazy
+			var eachServer = this;
+			if (eachServer.isHCIS()) {
+				eachServer.actualizarDatosLazy(function() {
 					if (funcionCallback) funcionCallback();
 				});
-			 }); // fin each
+			}
+		 }); // fin each
 
-		}
+	}
 
-		this.actualizarVersion = function() {
-			var versionBuena = '';
-			var estaVersionCorrupta = false;
-			var versionNoCoincidente = '';
-			$(self.servers).each(function(i) { // iteramos por todos los servers
-				var server = this;
-				if (server.tieneVersion() && !server.tieneVersionError()) {
+	Environment.prototype.actualizarVersion = function() {
+		var self = this;
+		var versionBuena = '';
+		var estaVersionCorrupta = false;
+		var versionNoCoincidente = '';
+		$(self.servers).each(function(i) { // iteramos por todos los servers de tipo HCIS
+			var eachServer = this;
+			if (eachServer.isHCIS()) {
+				if (eachServer.tieneVersion() && !eachServer.tieneVersionError()) {
 					if (versionBuena == '') {
-						versionBuena = server.version;
+						versionBuena = eachServer.version;
 					} else {
-						if (versionBuena != server.version) {
+						if (versionBuena != eachServer.version) {
 							estaVersionCorrupta = true;
-							versionNoCoincidente = server.version;
+							versionNoCoincidente = eachServer.version;
 						}
 					}
 				} else {
 					estaVersionCorrupta = true;
 				}
-			}); // fin each
-			self.version = versionBuena;
-			self.estaVersionCorrupta = estaVersionCorrupta;
-			self.versionNoCoincidente = versionNoCoincidente;
-		}
+			}
+		}); // fin each
+		self.version = versionBuena;
+		self.estaVersionCorrupta = estaVersionCorrupta;
+		self.versionNoCoincidente = versionNoCoincidente;
+	}
 
-	};
-
-	$.extend(commander.ent,{
+	$.extend(COMMANDER.ent,{
 			environment: function(id) {
 				 return new Environment(id);
 			}
