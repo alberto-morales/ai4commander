@@ -1,9 +1,9 @@
+var COMMANDER = function() {
+	// este es el constructor de commander
+
+};
+
 (function() {
-
-	var COMMANDER = (function() {
-		// este es el constructor de commander
-
-	});
 
 	COMMANDER.ent = COMMANDER.prototype;
 	COMMANDER.ent.prototype = COMMANDER.ent;

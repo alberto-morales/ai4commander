@@ -1,7 +1,5 @@
 (function() {
 
-	var COMMANDER = window.commander;
-
 	function Project (projectID) {
 		var self = this;
 

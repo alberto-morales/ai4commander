@@ -1,7 +1,5 @@
 (function() {
 
-	var COMMANDER = window.commander;
-
 	function Server (serverData) {
 		var self = this;
 

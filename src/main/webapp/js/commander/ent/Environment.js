@@ -1,7 +1,5 @@
 (function() {
 
-	var COMMANDER = window.commander;
-
 	function Environment (environmentID) {
 		var self = this;
 
