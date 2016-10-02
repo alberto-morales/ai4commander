@@ -14,23 +14,23 @@
 		        console.log('Error: ' + data);
 		    });
 
-		 $scope.developed = 'Alberto Morales';
+		$scope.developed = 'Alberto Morales';
 
-		 $scope.selectProject = function(projectID) {
-			 var curProject = COMMANDER.ent.project(projectID);
-			 $scope.curProject = curProject;
-			 $(curProject.environments).each(function(j) {
-				 this.inicializar(function() {
-					 // $scope.$apply();
-				 });
-			 }); // fin each
-		 };
+		$scope.selectProject = function(projectID) {
+			var curProject = COMMANDER.ent.project(projectID);
+			$scope.curProject = curProject;
+			$(curProject.environments).each(function(j) {
+				this.inicializar(function() {
+					// $scope.$apply();
+				});
+			}); // fin each
+		};
 
-		 $scope.selectEnvironment = function(selectedEnvironment) {
-			 selectedEnvironment.actualizarDatosLazy(function() {
-				 // $scope.$apply();
-			 });
-		 };
+		$scope.selectEnvironment = function(selectedEnvironment) {
+			selectedEnvironment.actualizarDatosLazy(function() {
+				// $scope.$apply();
+			});
+		};
 
 	};
 
@@ -79,7 +79,7 @@
 	      replace: true,
 	      scope: {
 	    	  'server' : '=obj'
-	        },
+	      },
 	      template: '<tr id="ci-fila-servidor-{{server.id}}"><td>'+
 	                '{{server.description}}&nbsp;<a href="{{ server.homeURL }}" target="_blank" title="Ir" alt="Ir"><span class="glyphicon glyphicon-share-alt" /></a>' +
 	                '</td><td>{{server.address}}</td><td>' +
@@ -101,14 +101,12 @@
 		                '</span>' +
 	                '</td></tr>'
 	    };
-	  };
+	};
 
-		var myModule = angular.module('commanderApp', []);
-
-		angular.module('commanderApp')
-			   .controller('mainController', ['$scope', '$http', mainController])
-			   .directive('projectInfo', projectInfoDirective)
-			   .directive('environmentInfo', environmentInfoDirective)
-			   .directive('serverInfo', serverInfoDirective);
+	angular.module('commanderApp',[])
+		   .controller('mainController', ['$scope', '$http', mainController])
+		   .directive('projectInfo', projectInfoDirective)
+		   .directive('environmentInfo', environmentInfoDirective)
+		   .directive('serverInfo', serverInfoDirective);
 
 })();
