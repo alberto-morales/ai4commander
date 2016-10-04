@@ -1,11 +1,9 @@
 (function() {
 
-	function mainController($scope, $http) {
-
-		$scope.commanderURL = COMMANDER.URL;
+	function mainController($scope, $http, config, Project) {
 
 		// Cuando se cargue la página, pide del API todos los PROJECTs
-		$http.get($scope.commanderURL + '/rest/projects')
+		$http.get(config.apiUrl + '/rest/projects')
 		    .success(function(data) {
 		        $scope.projects = data;
 		        console.log(data);
@@ -17,7 +15,7 @@
 		$scope.developed = 'Alberto Morales';
 
 		$scope.selectProject = function(projectID) {
-			var curProject = COMMANDER.ent.project(projectID);
+			var curProject = new Project(projectID);
 			$scope.curProject = curProject;
 			$(curProject.environments).each(function(j) {
 				this.inicializar(function() {
@@ -103,10 +101,10 @@
 	    };
 	};
 
-	angular.module('commanderApp',[])
-		   .controller('mainController', ['$scope', '$http', mainController])
-		   .directive('projectInfo', projectInfoDirective)
-		   .directive('environmentInfo', environmentInfoDirective)
-		   .directive('serverInfo', serverInfoDirective);
+	angular.module('yacInterface')
+			  .controller('mainController', ['$scope', '$http', 'config', 'Project', mainController])
+			  .directive('projectInfo', projectInfoDirective)
+			  .directive('environmentInfo', environmentInfoDirective)
+			  .directive('serverInfo', serverInfoDirective);
 
 })();
