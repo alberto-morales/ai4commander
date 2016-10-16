@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('yacInterface').factory('Environment', ['config', 'Server', function(config, Server) {
+	angular.module('yacInterface').factory('Environment', ['$http', 'config', 'Server', function($http, config, Server) {
 
 		function Environment (environmentID) {
 			var self = this;
@@ -10,30 +10,19 @@
 			self.urlBBDD = '';
 			self.userBBDD = '';
 
-			$.ajax({
-				  url: config.apiUrl + "/rest/environments/"+environmentID,
-
-				  success: function(environmentData) {
-					 $.extend(true, self, environmentData);
-				     console.log(self.servers);
-					 $(self.servers).each(function(j) {
-						var serverData = this;
-						// la creacion del server es rápida, no tiene ajax
-						var serverObj = new Server(serverData);
-						serverObj.onActualizaVersion = function() {
-							self.actualizarVersion();
-						};
-						self.servers[j] = serverObj;
-					 }); // fin each
-				  },
-				  processData : false,
-				  dataType: 'json',
-				  async: false,
-				  error: function(data) {
-	                  	 alert("No se puede recuperar el environment: "+environmentID);
-					     data.operacion = 'environment';
-					     console.log(data);
-				  }
+			$http.get(config.apiUrl + "/rest/environments/"+environmentID).then(function(response) {
+				var environmentData = response.data;
+				 $.extend(true, self, environmentData);
+			     console.log(self.servers);
+				 $(self.servers).each(function(j) {
+					var serverData = this;
+					// la creacion del server es rápida, no tiene ajax
+					var serverObj = new Server(serverData);
+					serverObj.onActualizaVersion = function() {
+						self.actualizarVersion();
+					};
+					self.servers[j] = serverObj;
+				 }); // fin each
 			});
 
 		};
@@ -57,32 +46,18 @@
 
 			var self = this;
 
-			$.ajax({
-				  url: config.apiUrl + "/rest/environments/"+self.id+"/shema",
+			$http.get(config.apiUrl + "/rest/environments/"+self.id+"/shema").then(function(response) {
+				var schemaInfo = response.data;
 
-				  success: function(schemaInfo) {
+				var urlBBDD = schemaInfo.substring(0, schemaInfo.indexOf("|"));
+				var userBBDD = schemaInfo.substring(schemaInfo.indexOf("|") + 1, schemaInfo.lenght);
 
-					 var urlBBDD = schemaInfo.substring(0, schemaInfo.indexOf("|"));
-			    		 var userBBDD = schemaInfo.substring(schemaInfo.indexOf("|") + 1, schemaInfo.lenght);
+				$.extend(true, self, {'urlBBDD' : urlBBDD, 'userBBDD' : userBBDD});
 
-					 $.extend(true, self, {'urlBBDD' : urlBBDD, 'userBBDD' : userBBDD});
-
-					 if (self.onActualizaVersion) self.onActualizaVersion();
-					 var datosConsola = { 'operacion' : 'environment.' + self.id + '.schema', 'urlBBDD' : urlBBDD, 'userBBDD' : userBBDD };
-				     console.log(datosConsola);
-				     if (funcionCallback) funcionCallback();
-				  },
-				  processData : false,
-				  async: true,
-				  error: function(data) {
-	                  alert("No se puede actualizar el schema del environment: "+self.id);
-					  self.urlBBDD = '<<ERROR>>';
-					  self.userBBDD = '<<ERROR>>';
-
-					  data.operacion = 'ERROR environment.' + self.id + '.schema';
-					  console.log(data);
-					  if (funcionCallback) funcionCallback();
-				  }
+				if (self.onActualizaVersion) self.onActualizaVersion();
+				var datosConsola = { 'operacion' : 'environment.' + self.id + '.schema', 'urlBBDD' : urlBBDD, 'userBBDD' : userBBDD };
+				console.log(datosConsola);
+				if (funcionCallback) funcionCallback();
 			});
 
 			$(self.servers).each(function(i) { // iteramos por todos los servers de tipo HCIS para actualizar su alive status

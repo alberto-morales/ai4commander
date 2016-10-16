@@ -1,15 +1,13 @@
 (function() {
 
-	angular.module('yacInterface').factory('Project', ['config', 'Environment', function(config, Environment) {
+	angular.module('yacInterface').factory('Project', ['$http', 'config', 'Environment', function($http, config, Environment) {
 
 		function Project (projectID) {
 			var self = this;
 
-			$.ajax({
-				  url: config.apiUrl + '/rest/projects',
-
-				  success: function(listaProjects) {
-					  $(listaProjects).each(function(i) { // NO tenemos API para buscar un proyecto, por eso iteramos
+			$http.get(config.apiUrl + '/rest/projects').then(function(response) {
+				  var listaProjects = response.data;
+				  $(listaProjects).each(function(i) { // NO tenemos API para buscar un proyecto, por eso iteramos
 						 if (this.id == projectID) { // esto es que lo ha encontrado en la lista de proyectos
 							 $.extend(true, self, this);
 						     console.log(listaProjects);
@@ -21,17 +19,8 @@
 								 self.environments[j] = environmentData;
 							 }); // fin each
 						 }
-					 }); // fin each
-				  },
-				  processData : false,
-				  dataType: 'json',
-				  async: false,
-				  error: function(data) {
-					     data.operacion = 'projects';
-					     console.log(data);
-				  }
+				  }); // fin each
 			});
-
 		};
 
 		return Project;
