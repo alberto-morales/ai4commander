@@ -69,14 +69,14 @@
 				}
 			 }); // fin each
 
-			$(self.servers).each(function(i) { // iteramos por todos los servers de tipo HCIS para actualizar sus datos lazy
-				var eachServer = this;
-				if (eachServer.isHCIS()) {
-					eachServer.actualizarDatosLazy(function() {
-						if (funcionCallback) funcionCallback();
-					});
-				}
-			 }); // fin each
+//			$(self.servers).each(function(i) { // iteramos por todos los servers de tipo HCIS para actualizar sus datos lazy
+//				var eachServer = this;
+//				if (eachServer.isHCIS()) {
+//					eachServer.actualizarDatosLazy(function() {
+//						if (funcionCallback) funcionCallback();
+//					});
+//				}
+//			 }); // fin each
 
 		}
 

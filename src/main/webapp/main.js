@@ -12,8 +12,6 @@
 		        console.log('Error: ' + data);
 		    });
 
-		$scope.developed = 'Alberto Morales';
-
 		$scope.selectProject = function(projectID) {
 			var curProject = new Project(projectID);
 			$scope.curProject = curProject;
@@ -37,9 +35,9 @@
 	      restrict: 'E',
 	      replace: true,
 	      template: '<div id="ci-proyecto">' +
-	    	          '<div id="ci-proyecto-nombre">{{curProject.description}}</div>' +
-	    	          '<p>Environments</p>' +
-	    	          '<div id="ci-proyecto-entornos" style="border: 1px solid red;" >' +
+	    	          '<h2>{{curProject.description}}</h2>' +
+	    	          '<h5 ng-show="curProject"><strong>Environments</strong></h5>' +
+	    	          '<div class="panel-group" id="ci-proyecto-entornos" >' +
 	    	          	'<ng-repeat ng-repeat="environment in curProject.environments">' +
 	    	          		'<environment-info></environment-info>' +
 	    	          	'</ng-repeat>' +
@@ -52,19 +50,37 @@
 	    return {
 	      restrict: 'E',
 	      replace: true,
-	      template: '<div id="ci-entorno-{{environment.id}}" style="border: 1px solid blue;">' +
-	      			  '<div id="ci-entorno-id-{{environment.id}}"><a href="#" ng-click="selectEnvironment(environment)">{{ environment.id }}</a></div>' +
-	                  '<div id="ci-entorno-datos-{{environment.id}}">' +
-	                    '<p>Descripción: {{ environment.description }}</p>' +
-	                    '<p>URL: {{ environment.homeURL }}&nbsp;<a href="{{ environment.homeURL }}" target="_blank" title="Ir" alt="Ir"><span class="glyphicon glyphicon-share-alt" /></a></p>' +
-	                    '<p>Versión: {{ environment.version }}&nbsp; <span ng-show="environment.estaVersionCorrupta" class="glyphicon glyphicon-warning-sign" title="Ojo! Versiones NO coincidentes: {{ environment.versionNoCoincidente }}"></span></p>' +
-	                    '<p>Conexión: {{ environment.urlBBDD }}</p>' +
-	                    '<p>Esquema: {{ environment.userBBDD }}</p>' +
-	                    '<div id="ci-entorno-servidores-{{environment.id}}">' +
-	                    	'<p>Servers</p>' +
-	                    	'<table id="ci-tabla-servidores-{{environment.id}}"><thead><tr><th>Descripción</th><th>IP</th><th>Versión</th><th>Estado</th></tr></thead><tbody>' +
+	      template: '<div class="panel panel-default" id="ci-entorno-{{environment.id}}" >' +
+	      			  '<div class="panel-heading" id="ci-entorno-id-{{environment.id}}"><a href="#ci-entorno-datos-{{environment.id}}" data-toggle="collapse" ng-click="selectEnvironment(environment)">{{ environment.id }}</a></div>' +
+	                  '<div class="panel-body collapse" id="ci-entorno-datos-{{environment.id}}" >' +
+	                  	'<div class="row">' +
+	                      '<div class="col-sm-2"><strong>Descripción:</strong></div>' +
+	                      '<div class="col-sm-10">{{ environment.description }}</div>' +
+	                    '</div>' +
+	                  	'<div class="row">' +
+	                      '<div class="col-sm-2"><strong>URL:</strong></div>' +
+	                      '<div class="col-sm-10">{{ environment.homeURL }}&nbsp;<a href="{{ environment.homeURL }}" target="_blank" title="Ir" alt="Ir"><span class="glyphicon glyphicon-share-alt" /></a></div>' +
+	                    '</div>' +
+	                  	'<div class="row">' +
+	                      '<div class="col-sm-2"><strong>Versión:</strong></div>' +
+	                      '<div class="col-sm-10">{{ environment.version }}&nbsp; <span ng-show="environment.estaVersionCorrupta" class="glyphicon glyphicon-warning-sign" title="Ojo! Versiones NO coincidentes: {{ environment.versionNoCoincidente }}"></span></div>' +
+	                    '</div>' +
+	                  	'<div class="row">' +
+	                      '<div class="col-sm-2"><strong>Conexión:</strong></div>' +
+	                      '<div class="col-sm-10">{{ environment.urlBBDD }}</div>' +
+	                    '</div>' +
+	                  	'<div class="row">' +
+	                      '<div class="col-sm-2"><strong>Esquema:</strong></div>' +
+	                      '<div class="col-sm-10">{{ environment.userBBDD }}</div>' +
+	                    '</div>' +
+	                    '<div>&nbsp</div>' +
+	                    '<div class="panel panel-default" id="ci-entorno-servidores-{{environment.id}}">' +
+	                    	'<div class="panel-heading">Servers</div>' +
+	                    	'<div class="panel-body">' +
+	                    	'<table class="table table-condensed" id="ci-tabla-servidores-{{environment.id}}"><thead><tr><th>Descripción</th><th>IP</th><th>Versión</th><th>Estado</th></tr></thead><tbody>' +
 	    	          		  	'<tr server-info ng-repeat="server in environment.servers" obj="server" ></tr>' +
 	                    	'</tbody></table>' +
+	                    	'</div>' +
 	                    '</div>'+
 	                  '</div>'+
 	                '</div>'
@@ -92,10 +108,6 @@
 		                '<span ng-hide="server.tieneAlive()"><img id="ci-fila-servidor-alive-cargando-{{server.id}}" src="images/ajax-loader.gif" alt="Obteniendo alive..." title="Obteniendo alive..."/></span>' +
 		                '<span id="ci-fila-servidor-alive-info-{{server.id}}" ng-show="server.tieneAlive()">' +
 			                '<span ng-show="server.tieneAliveError()" class="glyphicon glyphicon-remove" ></span>' +
-			                '<span id="ci-fila-servidor-alive-info-icons-{{server.id}}" ng-hide="server.tieneAliveError()">' +
-				                '<span ng-show="server.alive" class="glyphicon glyphicon-thumbs-up" ><a href="{{ server.homeURL }}" target="_blank" title="Parar" alt="Parar"><span class="glyphicon glyphicon-stop" /></a></span>' +
-				                '<span ng-hide="server.alive" class="glyphicon glyphicon-thumbs-down" ><a href="{{ server.homeURL }}" target="_blank" title="Arrancar" alt="Arrancar"><span class="glyphicon glyphicon-play" /></a></span>' +
-			                '</span>' +
 		                '</span>' +
 	                '</td></tr>'
 	    };

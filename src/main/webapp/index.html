@@ -7,10 +7,11 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=10" />
 	    <title>COMMANDER - A place to rule them all</title>
 		<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-	    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-		<link rel="stylesheet" href="css/demo.css">
+    	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/demo2.css">
 
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 
 		<script type="text/javascript" src="js/MP.js" ></script>
@@ -24,18 +25,19 @@
 	<body ng-controller='mainController'>
 
 		<div class="meny">
+			<img id="hp-logo" src="images/HPE_log_left_wht.png" />
 			<h2>CAM</h2>
-			<ul ng-repeat="proy in projects">
-				<li><a href="#" ng-click="selectProject(proy.id)">{{ proy.description }}</a></li>
-			</ul>
+			<div class="list-group" ng-repeat="proy in projects">
+				<a href="#" class="list-group-item" ng-click="selectProject(proy.id)">{{ proy.description }}</a>
+			</div>
 		</div>
 
 		<div class="meny-arrow"></div>
 
 		<div class="contents">
-		    <!--Cabecera-->
-	        <project-info></project-info>
-			<h2>Developed by {{developed}}</h2>
+			<div class="container">
+		        <project-info></project-info>
+			</div>
 		</div>
 
 		<script src="js/meny.js"></script>
