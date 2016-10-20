@@ -5,18 +5,19 @@
 		function Server (serverData) {
 			var self = this;
 
-			$.extend(true, self, serverData);
-
 			self.version = "?";
 			self.alive   = "?";
 
+			$.extend(true, self, serverData);
+
 		};
 
-		Server.prototype.actualizarDatosLazy = function(funcionCallback){
+		Server.prototype.actualizarDatosLazy = function(){
 
 			var self = this;
 
 			$http.get(config.apiUrl + "/rest/servers/"+self.id).then(function(response) {
+
 				  var serverDataEnhanced = response.data;
 				  if (self.tieneVersion()) {
 					  serverDataEnhanced.version = self.version;
@@ -28,12 +29,11 @@
 				 if (self.onActualizaVersion) self.onActualizaVersion();
 				 serverDataEnhanced.operacion = 'server';
 			     console.log(serverDataEnhanced);
-			     funcionCallback();
 			});
 
 		}
 
-		Server.prototype.actualizarVersion = function(funcionCallback){
+		Server.prototype.actualizarVersion = function(){
 			var self = this;
 
 			if (self.isHCIS()) {
@@ -43,29 +43,26 @@
 					 $.extend(true, self, {'version' : versionInfo});
 					 var datosConsola = { 'operacion' : 'server.' + self.id + '.version', 'versionInfo' : versionInfo };
 				     console.log(datosConsola);
+					 if (self.onActualizaVersion) self.onActualizaVersion();
 				});
 
 			} else {
 				self.version = '?';
+				if (self.onActualizaVersion) self.onActualizaVersion();
 			}
-
-			if (self.onActualizaVersion) self.onActualizaVersion();
-			if (funcionCallback) funcionCallback();
-
 		}
 
-		Server.prototype.actualizarAlive = function(funcionCallback){
-			var self = this;
-
-			$http.get(config.apiUrl + "/rest/servers/"+self.id+"/status").then(function(response) {
-				 var aliveStatus = response.data;
-				 $.extend(true, self, {'alive' : aliveStatus});
-				 var datosConsola = { 'operacion' : 'server.' + self.id + '.status', 'alive' : aliveStatus };
-			     console.log(datosConsola);
-			     if (funcionCallback) funcionCallback();
-			});
-
-		}
+//		Server.prototype.actualizarAlive = function(){
+//			var self = this;
+//
+//			$http.get(config.apiUrl + "/rest/servers/"+self.id+"/status").then(function(response) {
+//				 var aliveStatus = response.data;
+//				 $.extend(true, self, {'alive' : aliveStatus});
+//				 var datosConsola = { 'operacion' : 'server.' + self.id + '.status', 'alive' : aliveStatus };
+//			     console.log(datosConsola);
+//			});
+//
+//		}
 
 		Server.prototype.tieneVersion = function() {
 			var self = this;

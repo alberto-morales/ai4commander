@@ -16,10 +16,9 @@
 			     console.log(self.servers);
 				 $(self.servers).each(function(j) {
 					var serverData = this;
-					// la creacion del server es rápida, no tiene ajax
 					var serverObj = new Server(serverData);
 					serverObj.onActualizaVersion = function() {
-						self.actualizarVersion();
+						self.actualizarVersionEnFuncionDeLaDeLosServers();
 					};
 					self.servers[j] = serverObj;
 				 }); // fin each
@@ -27,23 +26,19 @@
 
 		};
 
-		Environment.prototype.inicializar = function(funcionCallback) {
-
+		Environment.prototype.inicializar = function() {
 			var self = this;
 
 			$(self.servers).each(function(i) { // iteramos por todos los servers para actualizar su version
 				var eachServer = this;
 				if (eachServer.isHCIS()) {
-					eachServer.actualizarVersion(function() {
-						if (funcionCallback) funcionCallback();
-					});
+					eachServer.actualizarVersion();
 				}
 			 }); // fin each
 
 		}
 
-		Environment.prototype.actualizarDatosLazy = function(funcionCallback) {
-
+		Environment.prototype.actualizarDatosLazy = function() {
 			var self = this;
 
 			$http.get(config.apiUrl + "/rest/environments/"+self.id+"/shema").then(function(response) {
@@ -54,33 +49,27 @@
 
 				$.extend(true, self, {'urlBBDD' : urlBBDD, 'userBBDD' : userBBDD});
 
-				if (self.onActualizaVersion) self.onActualizaVersion();
 				var datosConsola = { 'operacion' : 'environment.' + self.id + '.schema', 'urlBBDD' : urlBBDD, 'userBBDD' : userBBDD };
 				console.log(datosConsola);
-				if (funcionCallback) funcionCallback();
 			});
 
-			$(self.servers).each(function(i) { // iteramos por todos los servers de tipo HCIS para actualizar su alive status
-				var eachServer = this;
-				if (eachServer.isHCIS()) {
-					eachServer.actualizarAlive(function() {
-						if (funcionCallback) funcionCallback();
-					});
-				}
-			 }); // fin each
-
-//			$(self.servers).each(function(i) { // iteramos por todos los servers de tipo HCIS para actualizar sus datos lazy
+//			$(self.servers).each(function(i) { // iteramos por todos los servers de tipo HCIS para actualizar su alive status
 //				var eachServer = this;
 //				if (eachServer.isHCIS()) {
-//					eachServer.actualizarDatosLazy(function() {
-//						if (funcionCallback) funcionCallback();
-//					});
+//					eachServer.actualizarAlive();
 //				}
 //			 }); // fin each
 
+			$(self.servers).each(function(i) { // iteramos por todos los servers de tipo HCIS para actualizar sus datos lazy
+				var eachServer = this;
+				if (eachServer.isHCIS()) {
+					eachServer.actualizarDatosLazy();
+				}
+			 }); // fin each
+
 		}
 
-		Environment.prototype.actualizarVersion = function() {
+		Environment.prototype.actualizarVersionEnFuncionDeLaDeLosServers = function() {
 			var self = this;
 			var versionBuena = '';
 			var estaVersionCorrupta = false;

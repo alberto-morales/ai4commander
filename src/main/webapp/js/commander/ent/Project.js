@@ -13,8 +13,6 @@
 						     console.log(listaProjects);
 							 $(self.environments).each(function(j) {
 								 var environmentID = this;
-								 // la creacion del environment tiene ajax sincrona pero rapida,
-								 // al iterar por los servers no hace ajax
 								 var environmentData = new Environment(environmentID);
 								 self.environments[j] = environmentData;
 							 }); // fin each

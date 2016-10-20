@@ -16,16 +16,12 @@
 			var curProject = new Project(projectID);
 			$scope.curProject = curProject;
 			$(curProject.environments).each(function(j) {
-				this.inicializar(function() {
-					// $scope.$apply();
-				});
+				this.inicializar();
 			}); // fin each
 		};
 
 		$scope.selectEnvironment = function(selectedEnvironment) {
-			selectedEnvironment.actualizarDatosLazy(function() {
-				// $scope.$apply();
-			});
+			selectedEnvironment.actualizarDatosLazy();
 		};
 
 	};
@@ -97,17 +93,19 @@
 	      template: '<tr id="ci-fila-servidor-{{server.id}}"><td>'+
 	                '{{server.description}}&nbsp;<a href="{{ server.homeURL }}" target="_blank" title="Ir" alt="Ir"><span class="glyphicon glyphicon-share-alt" /></a>' +
 	                '</td><td>{{server.address}}</td><td>' +
-		                '<span ng-hide="server.tieneVersion()"><img id="ci-fila-servidor-version-cargando-{{server.id}}" src="images/ajax-loader.gif" alt="Obteniendo versión..." title="Obteniendo versión..."/></span>' +
-		                '<span id="ci-fila-servidor-version-info-{{server.id}}" ng-show="server.tieneVersion()">' +
+		                '<span ><img id="ci-fila-servidor-version-cargando-{{server.id}}" src="images/ajax-loader.gif" alt="Obteniendo versión..." title="Obteniendo versión..."/></span>' +
+		                '<span id="ci-fila-servidor-version-info-{{server.id}}" >' +
 			                '<span ng-show="server.tieneVersionError()" class="glyphicon glyphicon-remove" ></span>' +
 			                '<span id="ci-fila-servidor-version-info-text-{{server.id}}" ng-hide="server.tieneVersionError()">' +
 			                	'{{server.version}}' +
 			                '</span>' +
 		                '</span>' +
 	                '</td><td>' +
-		                '<span ng-hide="server.tieneAlive()"><img id="ci-fila-servidor-alive-cargando-{{server.id}}" src="images/ajax-loader.gif" alt="Obteniendo alive..." title="Obteniendo alive..."/></span>' +
-		                '<span id="ci-fila-servidor-alive-info-{{server.id}}" ng-show="server.tieneAlive()">' +
-			                '<span ng-show="server.tieneAliveError()" class="glyphicon glyphicon-remove" ></span>' +
+		                '<span><img id="ci-fila-servidor-alive-cargando-{{server.id}}" src="images/ajax-loader.gif" alt="Obteniendo alive..." title="Obteniendo alive..."/></span>' +
+		                '<span id="ci-fila-servidor-alive-info-{{server.id}}" >' +
+			                '<span ng-hide="server.tieneAliveError()" class="glyphicon glyphicon-remove" >' +
+			                '{{server.alive}}' +
+		                	'</span>' +
 		                '</span>' +
 	                '</td></tr>'
 	    };
