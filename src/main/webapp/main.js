@@ -47,7 +47,7 @@
 	      restrict: 'E',
 	      replace: true,
 	      template: '<div class="panel panel-default" id="ci-entorno-{{environment.id}}" >' +
-	      			  '<div class="panel-heading" id="ci-entorno-id-{{environment.id}}"><a href="#ci-entorno-datos-{{environment.id}}" data-toggle="collapse" ng-click="selectEnvironment(environment)">{{ environment.id }}</a></div>' +
+	      			  '<div class="panel-heading" id="ci-entorno-id-{{environment.id}}"><a href="#ci-entorno-datos-{{environment.id}}" style="color: #{{environment.color}}" data-toggle="collapse" ng-click="selectEnvironment(environment)">{{ environment.id }}</a></div>' +
 	                  '<div class="panel-body collapse" id="ci-entorno-datos-{{environment.id}}" >' +
 	                  	'<div class="row">' +
 	                      '<div class="col-sm-2"><strong>Descripción:</strong></div>' +
