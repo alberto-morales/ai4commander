@@ -41,7 +41,7 @@
 		Environment.prototype.actualizarDatosLazy = function() {
 			var self = this;
 
-			$http.get(config.apiUrl + "/rest/environments/"+self.id+"/shema").then(function(response) {
+			$http.get(config.apiUrl + "/rest/environments/"+self.id+"/schema").then(function(response) {
 				var schemaInfo = response.data;
 
 				var urlBBDD = schemaInfo.substring(0, schemaInfo.indexOf("|"));
