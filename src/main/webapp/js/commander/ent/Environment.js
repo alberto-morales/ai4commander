@@ -31,11 +31,25 @@
 
 			$(self.servers).each(function(i) { // iteramos por todos los servers para actualizar su version
 				var eachServer = this;
-				if (eachServer.isHCIS()) {
+				if (!eachServer.isOtros()) {
 					eachServer.actualizarVersion();
 				}
 			 }); // fin each
 
+		}
+
+		Environment.prototype.tieneServersOtrosTipos = function() {
+			var self = this;
+
+			var resultado = false;
+			$(self.servers).each(function(i) {
+				var eachServer = this;
+				if (eachServer.isOtros()) {
+					resultado = true;
+				}
+			 }); // fin each
+
+			return resultado;
 		}
 
 		Environment.prototype.actualizarDatosLazy = function() {
@@ -53,16 +67,16 @@
 				console.log(datosConsola);
 			});
 
-//			$(self.servers).each(function(i) { // iteramos por todos los servers de tipo HCIS para actualizar su alive status
+//			$(self.servers).each(function(i) { // iteramos por todos los servers (de tipo no otros) para actualizar su alive status
 //				var eachServer = this;
-//				if (eachServer.isHCIS()) {
+//				if (!eachServer.isOtros()) {
 //					eachServer.actualizarAlive();
 //				}
 //			 }); // fin each
 
-			$(self.servers).each(function(i) { // iteramos por todos los servers de tipo HCIS para actualizar sus datos lazy
+			$(self.servers).each(function(i) { // iteramos por todos los servers (de tipo no otros) para actualizar sus datos lazy
 				var eachServer = this;
-				if (eachServer.isHCIS()) {
+				if (!eachServer.isOtros()) {
 					eachServer.actualizarDatosLazy();
 				}
 			 }); // fin each
@@ -74,9 +88,9 @@
 			var versionBuena = '';
 			var estaVersionCorrupta = false;
 			var versionNoCoincidente = '';
-			$(self.servers).each(function(i) { // iteramos por todos los servers de tipo HCIS
+			$(self.servers).each(function(i) { // iteramos por todos los servers de tipo no otros
 				var eachServer = this;
-				if (eachServer.isHCIS()) {
+				if (!eachServer.isOtros()) {
 					if (eachServer.tieneVersion() && !eachServer.tieneVersionError()) {
 						if (versionBuena == '') {
 							versionBuena = eachServer.version;

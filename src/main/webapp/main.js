@@ -71,10 +71,18 @@
 	                    '</div>' +
 	                    '<div>&nbsp</div>' +
 	                    '<div class="panel panel-default" id="ci-entorno-servidores-{{environment.id}}">' +
-	                    	'<div class="panel-heading">Servers</div>' +
+	                    	'<div class="panel-heading" style="color: #{{environment.color}}">Servers</div>' +
 	                    	'<div class="panel-body">' +
 	                    	'<table class="table table-condensed" id="ci-tabla-servidores-{{environment.id}}"><thead><tr><th>Descripción</th><th>IP</th><th>Versión</th><th>Estado</th></tr></thead><tbody>' +
 	    	          		  	'<tr server-info ng-repeat="server in environment.servers" obj="server" ></tr>' +
+	                    	'</tbody></table>' +
+	                    	'</div>' +
+	                    '</div>'+
+	                    '<div ng-if="environment.tieneServersOtrosTipos()" class="panel panel-default" id="ci-entorno-servidoresOtros-{{environment.id}}">' +
+	                    	'<div class="panel-heading" style="color: #{{environment.color}}">Otros</div>' +
+	                    	'<div class="panel-body">' +
+	                    	'<table class="table table-condensed" id="ci-tabla-servidoresOtros-{{environment.id}}"><thead><tr><th>Descripción</th><th>IP</th><th>Estado</th></tr></thead><tbody>' +
+	    	          		  	'<tr server-otros-info ng-repeat="server in environment.servers" obj="server" ></tr>' +
 	                    	'</tbody></table>' +
 	                    	'</div>' +
 	                    '</div>'+
@@ -90,22 +98,46 @@
 	      scope: {
 	    	  'server' : '=obj'
 	      },
-	      template: '<tr id="ci-fila-servidor-{{server.id}}"><td>'+
+	      template: '<tr ng-if="!server.isOtros()" id="ci-fila-servidor-{{server.id}}"><td>'+
 	                '{{server.description}}&nbsp;<a href="{{ server.homeURL }}" target="_blank" title="Ir" alt="Ir"><span class="glyphicon glyphicon-share-alt" /></a>' +
 	                '</td><td>{{server.address}}</td><td>' +
-		                '<span ><img id="ci-fila-servidor-version-cargando-{{server.id}}" src="images/ajax-loader.gif" alt="Obteniendo versión..." title="Obteniendo versión..."/></span>' +
+		                '<span ng-hide="server.tieneVersion()"><img id="ci-fila-servidor-version-cargando-{{server.id}}" src="images/ajax-loader.gif" alt="Obteniendo versión..." title="Obteniendo versión..."/></span>' +
 		                '<span id="ci-fila-servidor-version-info-{{server.id}}" >' +
 			                '<span ng-show="server.tieneVersionError()" class="glyphicon glyphicon-remove" ></span>' +
-			                '<span id="ci-fila-servidor-version-info-text-{{server.id}}" ng-hide="server.tieneVersionError()">' +
+			                '<span ng-show="server.tieneVersion() && !server.tieneVersionError()" id="ci-fila-servidor-version-info-text-{{server.id}}" >' +
 			                	'{{server.version}}' +
 			                '</span>' +
 		                '</span>' +
 	                '</td><td>' +
-		                '<span><img id="ci-fila-servidor-alive-cargando-{{server.id}}" src="images/ajax-loader.gif" alt="Obteniendo alive..." title="Obteniendo alive..."/></span>' +
+		                '<span ng-hide="server.tieneAlive()"><img id="ci-fila-servidor-alive-cargando-{{server.id}}" src="images/ajax-loader.gif" alt="Obteniendo alive..." title="Obteniendo alive..."/></span>' +
 		                '<span id="ci-fila-servidor-alive-info-{{server.id}}" >' +
-			                '<span ng-hide="server.tieneAliveError()" class="glyphicon glyphicon-remove" >' +
-			                '{{server.alive}}' +
-		                	'</span>' +
+			                '<span ng-show="server.tieneAliveError()" class="glyphicon glyphicon-remove" ></span>' +
+			                '<span ng-show="server.tieneAlive() && !server.tieneAliveError()" id="ci-fila-servidor-alive-info-text-{{server.id}}" >' +
+			                	'<span style="color: green;" ng-show="server.isAlive()" class="glyphicon glyphicon-thumbs-up" />' +
+	      						'<span style="color: red;" ng-hide="server.isAlive()" class="glyphicon glyphicon-thumbs-down" />' +
+			                '</span>' +
+		                '</span>' +
+	                '</td></tr>'
+	    };
+	};
+
+	function serverOtrosInfoDirective() {
+	    return {
+	      restrict: 'A',
+	      replace: true,
+	      scope: {
+	    	  'server' : '=obj'
+	      },
+	      template: '<tr ng-if="server.isOtros()" id="ci-fila-servidor-{{server.id}}"><td>'+
+	                '{{server.description}}&nbsp;<a href="{{ server.homeURL }}" target="_blank" title="Ir" alt="Ir"><span class="glyphicon glyphicon-share-alt" /></a>' +
+	                '</td><td>{{server.address}}</td><td>' +
+		                '<span ng-hide="server.tieneAlive()"><img id="ci-fila-servidor-alive-cargando-{{server.id}}" src="images/ajax-loader.gif" alt="Obteniendo alive..." title="Obteniendo alive..."/></span>' +
+		                '<span id="ci-fila-servidor-alive-info-{{server.id}}" >' +
+			                '<span ng-show="server.tieneAliveError()" class="glyphicon glyphicon-remove" ></span>' +
+			                '<span ng-show="server.tieneAlive() && !server.tieneAliveError()" id="ci-fila-servidor-alive-info-text-{{server.id}}" >' +
+			                	'<span style="color: green;" ng-show="server.isAlive()" class="glyphicon glyphicon-thumbs-up" />' +
+	      						'<span style="color: red;" ng-hide="server.isAlive()" class="glyphicon glyphicon-thumbs-down" />' +
+			                '</span>' +
 		                '</span>' +
 	                '</td></tr>'
 	    };
@@ -115,6 +147,7 @@
 			  .controller('mainController', ['$scope', '$http', 'config', 'Project', mainController])
 			  .directive('projectInfo', projectInfoDirective)
 			  .directive('environmentInfo', environmentInfoDirective)
+			  .directive('serverOtrosInfo', serverOtrosInfoDirective)
 			  .directive('serverInfo', serverInfoDirective);
 
 })();

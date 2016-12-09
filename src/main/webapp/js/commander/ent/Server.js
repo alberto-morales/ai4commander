@@ -36,7 +36,7 @@
 		Server.prototype.actualizarVersion = function(){
 			var self = this;
 
-			if (self.isHCIS()) {
+			if (!self.isOtros()) {
 
 				$http.get(config.apiUrl + "/rest/servers/"+self.id+"/version").then(function(response) {
 					 var versionInfo = response.data;
@@ -85,10 +85,18 @@
 			return self.tieneAlive() && self.alive == '<<ERROR>>';
 		}
 
-		Server.prototype.isHCIS = function() {
+		Server.prototype.isOtros = function() {
 			var self = this;
-			return 'hcis' == self.tipo;
+
+			return !('hcis' == self.tipo);
 		}
+
+		Server.prototype.isAlive = function() {
+			var self = this;
+
+			return ('S' == self.alive);
+		}
+
 
 		return Server;
 
