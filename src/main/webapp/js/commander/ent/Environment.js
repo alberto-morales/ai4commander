@@ -17,26 +17,12 @@
 				 $(self.servers).each(function(j) {
 					var serverData = this;
 					var serverObj = new Server(serverData);
-					serverObj.onActualizaVersion = function() {
-						self.actualizarVersionEnFuncionDeLaDeLosServers();
-					};
+
 					self.servers[j] = serverObj;
 				 }); // fin each
 			});
 
 		};
-
-		Environment.prototype.inicializar = function() {
-			var self = this;
-
-			$(self.servers).each(function(i) { // iteramos por todos los servers para actualizar su version
-				var eachServer = this;
-				if (!eachServer.isOtros()) {
-					eachServer.actualizarVersion();
-				}
-			 }); // fin each
-
-		}
 
 		Environment.prototype.tieneServersOtrosTipos = function() {
 			var self = this;
@@ -67,47 +53,36 @@
 				console.log(datosConsola);
 			});
 
-//			$(self.servers).each(function(i) { // iteramos por todos los servers (de tipo no otros) para actualizar su alive status
-//				var eachServer = this;
-//				if (!eachServer.isOtros()) {
-//					eachServer.actualizarAlive();
-//				}
-//			 }); // fin each
 
 			$(self.servers).each(function(i) { // iteramos por todos los servers (de tipo no otros) para actualizar sus datos lazy
 				var eachServer = this;
-				if (!eachServer.isOtros()) {
-					eachServer.actualizarDatosLazy();
-				}
-			 }); // fin each
-
-		}
-
-		Environment.prototype.actualizarVersionEnFuncionDeLaDeLosServers = function() {
-			var self = this;
-			var versionBuena = '';
-			var estaVersionCorrupta = false;
-			var versionNoCoincidente = '';
-			$(self.servers).each(function(i) { // iteramos por todos los servers de tipo no otros
-				var eachServer = this;
-				if (!eachServer.isOtros()) {
-					if (eachServer.tieneVersion() && !eachServer.tieneVersionError()) {
-						if (versionBuena == '') {
-							versionBuena = eachServer.version;
-						} else {
-							if (versionBuena != eachServer.version) {
+				eachServer.actualizarDatosLazy(function() { // actualizarVersionEnFuncionDeLaDeLosServers
+					var versionBuena = '';
+					var estaVersionCorrupta = false;
+					var versionNoCoincidente = '';
+					$(self.servers).each(function(i) { // iteramos por todos los servers de tipo no otros (de tipo no otros)
+						var eachServer = this;
+						if (!eachServer.isOtros()) {
+							if (eachServer.tieneVersion() && !eachServer.tieneVersionError()) {
+								if (versionBuena == '') {
+									versionBuena = eachServer.version;
+								} else {
+									if (versionBuena != eachServer.version) {
+										estaVersionCorrupta = true;
+										versionNoCoincidente = eachServer.version;
+									}
+								}
+							} else {
 								estaVersionCorrupta = true;
-								versionNoCoincidente = eachServer.version;
 							}
 						}
-					} else {
-						estaVersionCorrupta = true;
-					}
-				}
-			}); // fin each
-			self.version = versionBuena;
-			self.estaVersionCorrupta = estaVersionCorrupta;
-			self.versionNoCoincidente = versionNoCoincidente;
+					}); // fin each
+					self.version = versionBuena;
+					self.estaVersionCorrupta = estaVersionCorrupta;
+					self.versionNoCoincidente = versionNoCoincidente;
+				});
+			 }); // fin each
+
 		}
 
 		return Environment;

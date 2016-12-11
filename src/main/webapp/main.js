@@ -15,9 +15,6 @@
 		$scope.selectProject = function(projectID) {
 			var curProject = new Project(projectID);
 			$scope.curProject = curProject;
-			$(curProject.environments).each(function(j) {
-				this.inicializar();
-			}); // fin each
 		};
 
 		$scope.selectEnvironment = function(selectedEnvironment) {

@@ -12,76 +12,43 @@
 
 		};
 
-		Server.prototype.actualizarDatosLazy = function(){
-
+		Server.prototype.actualizarDatosLazy = function(callbackFunction) {
 			var self = this;
 
 			$http.get(config.apiUrl + "/rest/servers/"+self.id).then(function(response) {
-
-				  var serverDataEnhanced = response.data;
-				  if (self.tieneVersion()) {
-					  serverDataEnhanced.version = self.version;
-				  }
-				  if (self.tieneAlive()) {
-					  serverDataEnhanced.alive = self.alive;
-				  }
+				 var serverDataEnhanced = response.data;
 				 $.extend(true, self, serverDataEnhanced);
-				 if (self.onActualizaVersion) self.onActualizaVersion();
 				 serverDataEnhanced.operacion = 'server';
 			     console.log(serverDataEnhanced);
+
+				 if (typeof callbackFunction !== 'undefined') {
+					 callbackFunction();
+				 }
 			});
 
 		}
 
-		Server.prototype.actualizarVersion = function(){
-			var self = this;
-
-			if (!self.isOtros()) {
-
-				$http.get(config.apiUrl + "/rest/servers/"+self.id+"/version").then(function(response) {
-					 var versionInfo = response.data;
-					 $.extend(true, self, {'version' : versionInfo});
-					 var datosConsola = { 'operacion' : 'server.' + self.id + '.version', 'versionInfo' : versionInfo };
-				     console.log(datosConsola);
-					 if (self.onActualizaVersion) self.onActualizaVersion();
-				});
-
-			} else {
-				self.version = '?';
-				if (self.onActualizaVersion) self.onActualizaVersion();
-			}
-		}
-
-//		Server.prototype.actualizarAlive = function(){
-//			var self = this;
-//
-//			$http.get(config.apiUrl + "/rest/servers/"+self.id+"/status").then(function(response) {
-//				 var aliveStatus = response.data;
-//				 $.extend(true, self, {'alive' : aliveStatus});
-//				 var datosConsola = { 'operacion' : 'server.' + self.id + '.status', 'alive' : aliveStatus };
-//			     console.log(datosConsola);
-//			});
-//
-//		}
-
 		Server.prototype.tieneVersion = function() {
 			var self = this;
+
 			return self.version != '?';
 		}
 
-
 		Server.prototype.tieneVersionError = function() {
 			var self = this;
+
 			return self.tieneVersion() && self.version == '<<ERROR>>';
 		}
 
 		Server.prototype.tieneAlive = function() {
 			var self = this;
+
 			return self.alive != '?';
 		}
 
 		Server.prototype.tieneAliveError = function() {
 			var self = this;
+
 			return self.tieneAlive() && self.alive == '<<ERROR>>';
 		}
 
@@ -94,9 +61,8 @@
 		Server.prototype.isAlive = function() {
 			var self = this;
 
-			return ('S' == self.alive);
+			return ('S' === self.alive || true === self.alive);
 		}
-
 
 		return Server;
 
